@@ -174,10 +174,12 @@ function showBigPicture(pictureData) {
     var closeButton = document.getElementById("picture-cancel");
     var commentsCountBlock = document.querySelector(".big-picture .social__comment-count");
     var commentsLoaderButton = document.querySelector(".social__comments-loader");
+    var pictureDescription = document.querySelector(".big-picture .social__caption");
     
     picture.src = pictureData.url;
     likesNumber.innerHTML = pictureData.likes;
     commentsNumber.innerHTML = pictureData.comments.length;
+    pictureDescription.innerHTML = pictureData.description;
 
     show(bigPicture);
     modalOpen();
