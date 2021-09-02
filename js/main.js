@@ -111,8 +111,8 @@ function drawPictures() {
 
         newPicture.appendChild(getImg(itPicture.url, itPicture.description));
         newPicture.appendChild(getParagraph(itPicture.comments.length, itPicture.likes));
-        newPicture.addEventListener('click', function(event){
-            event.preventDefault();
+        newPicture.addEventListener('click', function(evt){
+            evt.preventDefault();
 
             showBigPicture(itPicture);
         });
@@ -197,18 +197,62 @@ function showBigPicture(pictureData) {
         }
     }
 
-    closeButton.addEventListener('click', function(event) {
-        event.preventDefault();
+    function closeBigPicture(evt){
         hide(bigPicture);
         modalClose();
         cleanBlock(socialComments);
         commentsCountBlock.classList.remove("visually-hidden");
         commentsLoaderButton.classList.remove("visually-hidden");
+        document.removeEventListener('keyup', escapeButtonHandler)
+    }
+
+    function escapeButtonHandler(e){
+        e.preventDefault();
+        if(e.key === "Escape"){
+            closeBigPicture();
+        }
+    }
+
+    closeButton.addEventListener('click', function(evt){
+        evt.preventDefault();
+        closeBigPicture();
     });
+    document.addEventListener('keyup', escapeButtonHandler);
+}
+
+function showEditForm(){
+    var uploadPhotosInput = document.querySelector("#upload-file");
+    var editFormOverlay = document.querySelector(".img-upload__overlay");
+    var closeButton = document.querySelector(".img-upload__overlay .img-upload__cancel");
+
+    uploadPhotosInput.addEventListener("change", function(evt) {
+        evt.preventDefault();
+        editFormOverlay.classList.remove("hidden");
+    });
+
+    function hideEditForm() {
+        editFormOverlay.classList.add("hidden");
+        document.removeEventListener("keyup", escapeButtonHandler)
+    }
+
+    closeButton.addEventListener("click", function(evt) {
+        evt.preventDefault();
+        hideEditForm();
+    });
+
+    function escapeButtonHandler(evt) {
+        evt.preventDefault();
+        if(evt.key === "Escape") {
+            hideEditForm();
+        }
+    }
+
+    document.addEventListener("keyup", escapeButtonHandler);
 }
 
 getPicturesData();
 drawPictures();
+showEditForm();
 
 // Другие полезные функции
 function getRandomNumber(minNumber, maxNumber) {
