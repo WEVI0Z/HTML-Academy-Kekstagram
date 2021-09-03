@@ -1,9 +1,7 @@
 'use strict'
-
-
 //Генерация случайного массива данных
-var photosNumber = 25;
-var commentsText = [
+var PHOTOS_NUMBER = 25;
+var COMMENTS_TEXT = [
     "Всё отлично!",
     "В целом все неплохо. Но не всё.",
     "Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.",
@@ -11,7 +9,8 @@ var commentsText = [
     "Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.",
     "Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!"
 ];
-var names = [
+
+var NAMES = [
     "Vlad",
     "Vadim",
     "Arthur",
@@ -75,12 +74,11 @@ function getPicturesData() {
     }
 }
 
-var userPictures = [];
 var picturesFragment = document.createDocumentFragment();
 var pictureWrap = document.querySelector('.pictures');
 
 function drawPictures() {
-    var template = document.getElementById('picture');
+    var template = document.querySelector('#picture');
     var templateContent = template.content.querySelector('.picture');
     
     function getImg(src, alt) {
