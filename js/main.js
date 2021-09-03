@@ -232,6 +232,7 @@ function showEditForm(){
 
     function hideEditForm() {
         editFormOverlay.classList.add("hidden");
+        uploadPhotosInput.value = none;
         document.removeEventListener("keyup", escapeButtonHandler)
     }
 
