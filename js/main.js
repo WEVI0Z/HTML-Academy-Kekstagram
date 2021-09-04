@@ -10,7 +10,7 @@ var COMMENTS_TEXT = [
     "Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!"
 ];
 
-var NAMES = [
+var USER_NAMES = [
     "Vlad",
     "Vadim",
     "Arthur",
@@ -36,7 +36,7 @@ var NAMES = [
     "Roman"
 ];
 
-var decscriptionList = [
+var DESCRIPTION_LIST = [
     "Тестим новую камеру!",
     "Затусили с друзьями на море",
     "Как же круто тут кормят",
@@ -49,76 +49,74 @@ var decscriptionList = [
 var picturesData = [];
 
 function getPicturesData() {
-    for(var i = 0; i < photosNumber; i++) {
-        var randomComments = [];
-        var randomName = names[getRandomNumber(0, names.length - 1)];
-        var randomNumberForCycle = getRandomNumber(2, 10);
-        var randomDescription = decscriptionList[getRandomNumber(0, decscriptionList.length - 1)]
-        
-        for(var j = 0; j < randomNumberForCycle; j++) {
-            randomComments[j] = {
+    function setUpComments() {
+        var commentsList = [];
+        var commentAmount = getRandomNumber(2, 10);
+
+        for(var j = 0; j < commentAmount; j++) {
+            commentsList.push({
                 avatar: "../img/avatar-" + getRandomNumber(1, 6) + ".svg",
-                text: commentsText[getRandomNumber(0, commentsText.length - 1)]
-            }
+                text: COMMENTS_TEXT[getRandomNumber(0, COMMENTS_TEXT.length - 1)]
+            });
         }
-        
-        var urlOfTheImage = i + 1;
-        
+        return commentsList;
+    }
+    for(var i = 0; i < PHOTOS_NUMBER; i++) {
+        var likesAmount = getRandomNumber(15, 200);
+        var descriptionIndex = getRandomNumber(0, DESCRIPTION_LIST.length - 1);
+        var userNameIndex = getRandomNumber(0, USER_NAMES.length - 1);
+
         picturesData[i] = {
-            url: "../photos/" + urlOfTheImage + ".jpg",
-            likes: getRandomNumber(15, 200),
-            comments: randomComments,
-            name: randomName,
-            description: randomDescription
+            url: "/photos/" + (i + 1) + ".jpg",
+            likes: likesAmount,
+            comments: setUpComments(),
+            name: USER_NAMES[userNameIndex],
+            description: DESCRIPTION_LIST[descriptionIndex]
         };
     }
 }
 
-var picturesFragment = document.createDocumentFragment();
-var pictureWrap = document.querySelector('.pictures');
-
 function drawPictures() {
-    var template = document.querySelector('#picture');
-    var templateContent = template.content.querySelector('.picture');
-    
-    function getImg(src, alt) {
-        var img = template.content.querySelector('.picture__img').cloneNode();
+    var picturesFragment = document.createDocumentFragment();
 
+    var pictureWrap = document.querySelector('.pictures');
+    var template = document.querySelector('#picture').content.querySelector('.picture');
+
+    function setImgOptions(img, src, alt) {
         img.src = src;
         img.alt = alt;
-
-        return img;
-    }
-
-    function getParagraph(commentsNumber, likesNumber){
-        var p = template.content.querySelector('.picture__info').cloneNode();
-        var commentsSpan = template.content.querySelector('.picture__comments').cloneNode();
-        var likesSpan = template.content.querySelector('.picture__likes').cloneNode();
-
-        commentsSpan.innerHTML = commentsNumber;
-        likesSpan.innerHTML = likesNumber;
-
-        p.appendChild(likesSpan);
-        p.appendChild(commentsSpan);
-
-        return p;
     }
     
-    picturesData.forEach(function(itPicture) {
-        var newPicture = templateContent.cloneNode();
+    picturesData.forEach(function(itPicture, index) {
+        var newPicture = template.cloneNode(true);
 
-        newPicture.appendChild(getImg(itPicture.url, itPicture.description));
-        newPicture.appendChild(getParagraph(itPicture.comments.length, itPicture.likes));
-        newPicture.addEventListener('click', function(evt){
-            evt.preventDefault();
+        var pictureImg = newPicture.querySelector('.picture__img');
+        var pictureComments = newPicture.querySelector('.picture__comments');
+        var pictureLikes = newPicture.querySelector('.picture__likes');
 
-            showBigPicture(itPicture);
-        });
+        setImgOptions(pictureImg, itPicture.url, itPicture.description);
+        
+        pictureComments.textContent = itPicture.comments.length;
+        pictureLikes.textContent = itPicture.likes;
 
         picturesFragment.appendChild(newPicture);
     });
 
     pictureWrap.appendChild(picturesFragment);
+
+    function setPicturesListeners() {
+        var pictures = pictureWrap.querySelectorAll(".picture");
+
+        pictures.forEach(function(itPicture, index) {
+            itPicture.addEventListener("click", function(evt){
+                evt.preventDefault();
+
+                showBigPicture(picturesData[index]);
+            })
+        })
+    }
+
+    setPicturesListeners();
 }
 
 function showBigPicture(pictureData) {
