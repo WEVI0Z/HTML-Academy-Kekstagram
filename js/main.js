@@ -281,6 +281,7 @@ function showEditForm(){
 
     uploadPhotosInput.addEventListener("change", function(evt) {
         evt.preventDefault();
+
         openEditForm();
     });
 
