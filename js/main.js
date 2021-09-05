@@ -288,11 +288,11 @@ function showEditForm(){
     function controlEditFormsHandlers() {
         closeButton.addEventListener("click", function(evt) {
             evt.preventDefault();
-    
+     
             hideEditForm();
         });
     
-        document.addEventListener("keyup", escapeButtonHandler);
+        document.addEventListener("keyup", escapeButtonHandler); 
     }
 
     function escapeButtonHandler(evt) {
@@ -309,7 +309,8 @@ function showEditForm(){
                 if(evt.target.type === "radio") {
                     FILTERS_LIST.forEach(function(itFilter) {
                         if(itFilter.name === evt.target.value) {
-                            previewImage.setAttribute("style", "filter: " + itFilter.cssRuleName + "(" + itFilter.maxValue + itFilter.unit + ")");
+                            previewImage.setAttribute("style", "filter: " + itFilter.cssRuleName +
+                             "(" + itFilter.maxValue + itFilter.unit + ")");
                         } else if(evt.target.value === "none"){
                             previewImage.removeAttribute("style");
                         }
