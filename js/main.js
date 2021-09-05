@@ -173,23 +173,33 @@ function drawPictures() {
 
 function showBigPicture(pictureData) {
     function constructTheComment(commentData) {
+        function constructTheParagraph() {
+            var p = document.createElement("p");
+
+            p.classList.add("social__text");
+            p.textContent = commentData.text;
+            
+            return p;
+        }
+
+        function constructTheAvatar() {
+            var img = document.createElement("img");
+
+            img.classList.add("social__picture");
+            img.src = commentData.avatar;
+            img.alt = "Аватар комментатора фотографии";
+            img.width = 35;
+            img.height = 35;
+
+            return img;
+        }
         var li = document.createElement("li");
-        var img = document.createElement("img");
-        var p = document.createElement("p");
 
         li.classList.add("social__comment");
 
-        img.classList.add("social__picture");
-        img.src = commentData.avatar;
-        img.alt = "Аватар комментатора фотографии";
-        img.width = 35;
-        img.height = 35;
 
-        p.classList.add("social__text");
-        p.innerHTML = commentData.text;
-
-        li.appendChild(img);
-        li.appendChild(p);
+        li.appendChild(constructTheAvatar());
+        li.appendChild(constructTheParagraph());
 
         return li;
     }
