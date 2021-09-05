@@ -1,6 +1,20 @@
 'use strict'
+
+function getRandomNumber(minNumber, maxNumber) {
+    var min = Math.ceil(minNumber);
+    var max = Math.floor(maxNumber);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function escapeTemplate(doSomethingFunction, key) {
+    if(key === "Escape") {
+        doSomethingFunction();
+    }
+}
+
 //Генерация случайного массива данных
 var PHOTOS_NUMBER = 25;
+
 var COMMENTS_TEXT = [
     "Всё отлично!",
     "В целом все неплохо. Но не всё.",
@@ -42,8 +56,46 @@ var DESCRIPTION_LIST = [
     "Как же круто тут кормят",
     "Отдыхаем...",
     "Цените каждое мгновенье. Цените тех, кто рядом с вами",
-    "и отгоняйте все сомненья. Не обижайте всех словами......",
+    "Отгоняйте все сомненья. Не обижайте всех словами......",
     "Вот это тачка!"
+];
+
+var FILTERS_LIST = [
+    {
+        name: 'chrome',
+        cssRuleName: 'grayscale',
+        minValue: 0,
+        maxValue: 1,
+        unit: ""
+    },
+    {
+        name: 'sepia',
+        cssRuleName: 'sepia',
+        minValue: 0,
+        maxValue: 1,
+        unit: ""
+    },
+    {
+        name: 'marvin',
+        cssRuleName: 'invert',
+        minValue: 0,
+        maxValue: 100,
+        unit: "#"
+    },
+    {
+        name: 'phobos',
+        cssRuleName: 'blur',
+        minValue: 0,
+        maxValue: 3,
+        unit: "px"
+    },
+    {
+        name: 'heat',
+        cssRuleName: 'brightness',
+        minValue: 1,
+        maxValue: 3,
+        unit: ""
+    }
 ];
 
 var picturesData = [];
@@ -104,7 +156,7 @@ function drawPictures() {
 
     pictureWrap.appendChild(picturesFragment);
 
-    function setPicturesListeners() {
+    function controlPicturesHandler() {
         var pictures = pictureWrap.querySelectorAll(".picture");
 
         pictures.forEach(function(itPicture, index) {
@@ -116,7 +168,7 @@ function drawPictures() {
         })
     }
 
-    setPicturesListeners();
+    controlPicturesHandler();
 }
 
 function showBigPicture(pictureData) {
@@ -142,22 +194,6 @@ function showBigPicture(pictureData) {
         return li;
     }
 
-    function hide(element) {
-        element.classList.add("hidden");
-    }
-
-    function show(element) {
-        element.classList.remove("hidden");
-    }
-
-    function modalOpen() {
-        document.querySelector("body").classList.add("modalOpen");
-    }
-
-    function modalClose() {
-        document.querySelector("body").classList.remove("modalOpen");
-    }
-
     function cleanBlock(block) {
         block.innerHTML = "";
     }
@@ -167,53 +203,61 @@ function showBigPicture(pictureData) {
     var likesNumber = document.querySelector(".big-picture .likes-count");
     var commentsNumber = document.querySelector(".big-picture .comments-count");
     var socialComments = document.querySelector(".big-picture .social__comments");
-    var closeButton = document.getElementById("picture-cancel");
+    var closeButton = document.querySelector("#picture-cancel");
     var commentsCountBlock = document.querySelector(".big-picture .social__comment-count");
     var commentsLoaderButton = document.querySelector(".social__comments-loader");
     var pictureDescription = document.querySelector(".big-picture .social__caption");
     
     picture.src = pictureData.url;
-    likesNumber.innerHTML = pictureData.likes;
-    commentsNumber.innerHTML = pictureData.comments.length;
-    pictureDescription.innerHTML = pictureData.description;
+    likesNumber.textContent = pictureData.likes;
+    commentsNumber.textContent = pictureData.comments.length;
+    pictureDescription.textContent = pictureData.description;
 
-    show(bigPicture);
-    modalOpen();
+    function controlTheCommentsCounter() {
+        if(pictureData.comments.length <= 5) {
+            commentsCountBlock.classList.add("visually-hidden");
+            commentsLoaderButton.classList.add("visually-hidden");
+        }
 
-    if(pictureData.comments.length <= 5) {
-        commentsCountBlock.classList.add("visually-hidden");
-        commentsLoaderButton.classList.add("visually-hidden");
+        var availableForShowCommentsAmount = Math.min(5, pictureData.comments.length);
+
+        for(var i = 0; i < availableForShowCommentsAmount; i++) {
+            socialComments.appendChild(constructTheComment(pictureData.comments[i]));
+        }
     }
 
-    for(var i = 0; i < pictureData.comments.length; i++) {
-        socialComments.appendChild(constructTheComment(pictureData.comments[i]));
-
-        if(i == 5) {
-            break;
-        }
+    function showPopUp() {
+        bigPicture.classList.remove("hidden");
+        document.querySelector("body").classList.add("modalOpen");
+        controlTheCommentsCounter();
+        bigPictureHandlersControl();
     }
 
     function closeBigPicture(evt){
-        hide(bigPicture);
-        modalClose();
+        bigPicture.classList.add("hidden");
+        document.querySelector("body").classList.remove("modalOpen");
         cleanBlock(socialComments);
         commentsCountBlock.classList.remove("visually-hidden");
         commentsLoaderButton.classList.remove("visually-hidden");
-        document.removeEventListener('keyup', escapeButtonHandler)
+        document.removeEventListener('keyup', escapeButtonHandler);
     }
-
-    function escapeButtonHandler(e){
-        e.preventDefault();
-        if(e.key === "Escape"){
-            closeBigPicture();
-        }
-    }
-
-    closeButton.addEventListener('click', function(evt){
+    
+    function escapeButtonHandler(evt){
         evt.preventDefault();
-        closeBigPicture();
-    });
-    document.addEventListener('keyup', escapeButtonHandler);
+
+        escapeTemplate(closeBigPicture, evt.key);
+    }
+
+    function bigPictureHandlersControl() {
+        closeButton.addEventListener('click', function(evt){
+            evt.preventDefault();
+            closeBigPicture();
+        });
+
+        document.addEventListener('keyup', escapeButtonHandler);
+    }
+
+    showPopUp();
 }
 
 function showEditForm(){
@@ -223,37 +267,59 @@ function showEditForm(){
 
     uploadPhotosInput.addEventListener("change", function(evt) {
         evt.preventDefault();
-        editFormOverlay.classList.remove("hidden");
+        openEditForm();
     });
 
-    function hideEditForm() {
-        editFormOverlay.classList.add("hidden");
-        uploadPhotosInput.value = none;
-        document.removeEventListener("keyup", escapeButtonHandler)
+    function controlEditFormsHandlers() {
+        closeButton.addEventListener("click", function(evt) {
+            evt.preventDefault();
+    
+            hideEditForm();
+        });
+    
+        document.addEventListener("keyup", escapeButtonHandler);
     }
-
-    closeButton.addEventListener("click", function(evt) {
-        evt.preventDefault();
-        hideEditForm();
-    });
 
     function escapeButtonHandler(evt) {
         evt.preventDefault();
-        if(evt.key === "Escape") {
-            hideEditForm();
-        }
+        escapeTemplate(hideEditForm, evt.key);
     }
 
-    document.addEventListener("keyup", escapeButtonHandler);
+    function controlFilters() {
+        var previewImage = editFormOverlay.querySelector(".img-upload__preview").querySelector("img");
+        var filterButtonsWrap = editFormOverlay.querySelector(".effects__list");
+        var filterButtons = filterButtonsWrap.querySelectorAll(".effects__radio");
+
+        function setFilterButtonsLesteners() {
+            filterButtonsWrap.addEventListener("click", function(evt) {
+                if(evt.target.type === "radio") {
+                    FILTERS_LIST.forEach(function(itButton) {
+                        // console.log(evt.target.value + "   " + itButton.name);
+                        if(itButton.name === evt.target.value) {
+                            // console.log("hello");
+                        }
+                    })
+                }
+            });
+        }
+        setFilterButtonsLesteners();
+    }
+
+    function openEditForm() {
+        editFormOverlay.classList.remove("hidden");
+        controlEditFormsHandlers();
+        controlFilters();
+    }
+    
+    function hideEditForm() {
+        editFormOverlay.classList.add("hidden");
+        uploadPhotosInput.value = "";
+        document.removeEventListener("keyup", escapeButtonHandler)
+    }
+
+    openEditForm();
 }
 
 getPicturesData();
 drawPictures();
 showEditForm();
-
-// Другие полезные функции
-function getRandomNumber(minNumber, maxNumber) {
-    var min = Math.ceil(minNumber);
-    var max = Math.floor(maxNumber);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
