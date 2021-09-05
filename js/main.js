@@ -80,7 +80,7 @@ var FILTERS_LIST = [
         cssRuleName: 'invert',
         minValue: 0,
         maxValue: 100,
-        unit: "#"
+        unit: "%"
     },
     {
         name: 'phobos',
@@ -293,10 +293,11 @@ function showEditForm(){
         function setFilterButtonsLesteners() {
             filterButtonsWrap.addEventListener("click", function(evt) {
                 if(evt.target.type === "radio") {
-                    FILTERS_LIST.forEach(function(itButton) {
-                        // console.log(evt.target.value + "   " + itButton.name);
-                        if(itButton.name === evt.target.value) {
-                            // console.log("hello");
+                    FILTERS_LIST.forEach(function(itFilter) {
+                        if(itFilter.name === evt.target.value) {
+                            previewImage.setAttribute("style", "filter: " + itFilter.cssRuleName + "(" + itFilter.maxValue + itFilter.unit + ")");
+                        } else if(evt.target.value === "none"){
+                            previewImage.removeAttribute("style");
                         }
                     })
                 }
