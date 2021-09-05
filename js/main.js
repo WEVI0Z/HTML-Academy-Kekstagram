@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function getRandomNumber(minNumber, maxNumber) {
     var min = Math.ceil(minNumber);
