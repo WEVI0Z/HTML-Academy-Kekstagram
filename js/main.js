@@ -289,7 +289,6 @@ function showEditForm(){
     function controlFilters() {
         var previewImage = editFormOverlay.querySelector(".img-upload__preview").querySelector("img");
         var filterButtonsWrap = editFormOverlay.querySelector(".effects__list");
-        // var filterButtons = filterButtonsWrap.querySelectorAll(".effects__radio");
 
         function setFilterButtonsLesteners() {
             filterButtonsWrap.addEventListener("click", function(evt) {
