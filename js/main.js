@@ -239,17 +239,19 @@ function showBigPicture(pictureData) {
     function showPopUp() {
         bigPicture.classList.remove("hidden");
         document.querySelector("body").classList.add("modalOpen");
+
         controlTheCommentsCounter();
         bigPictureHandlersControl();
     }
 
     function closeBigPicture(evt){
         bigPicture.classList.add("hidden");
-        document.querySelector("body").classList.remove("modalOpen");
-        cleanBlock(socialComments);
         commentsCountBlock.classList.remove("visually-hidden");
         commentsLoaderButton.classList.remove("visually-hidden");
+        document.querySelector("body").classList.remove("modalOpen");
         document.removeEventListener('keyup', escapeButtonHandler);
+
+        cleanBlock(socialComments);
     }
     
     function escapeButtonHandler(evt){
@@ -318,14 +320,15 @@ function showEditForm(){
 
     function openEditForm() {
         editFormOverlay.classList.remove("hidden");
+
         controlEditFormsHandlers();
         controlFilters();
     }
     
     function hideEditForm() {
         editFormOverlay.classList.add("hidden");
+        document.removeEventListener("keyup", escapeButtonHandler);
         uploadPhotosInput.value = "";
-        document.removeEventListener("keyup", escapeButtonHandler)
     }
 }
 
