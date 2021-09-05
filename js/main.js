@@ -251,6 +251,7 @@ function showBigPicture(pictureData) {
     function bigPictureHandlersControl() {
         closeButton.addEventListener('click', function(evt){
             evt.preventDefault();
+            
             closeBigPicture();
         });
 
