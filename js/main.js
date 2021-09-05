@@ -111,6 +111,7 @@ function getPicturesData() {
                 text: COMMENTS_TEXT[getRandomNumber(0, COMMENTS_TEXT.length - 1)]
             });
         }
+
         return commentsList;
     }
     for(var i = 0; i < PHOTOS_NUMBER; i++) {
@@ -164,8 +165,8 @@ function drawPictures() {
                 evt.preventDefault();
 
                 showBigPicture(picturesData[index]);
-            })
-        })
+            });
+        });
     }
 
     controlPicturesHandler();
