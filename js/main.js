@@ -251,7 +251,7 @@ function showBigPicture(pictureData) {
     function bigPictureHandlersControl() {
         closeButton.addEventListener('click', function(evt){
             evt.preventDefault();
-            
+
             closeBigPicture();
         });
 
@@ -318,8 +318,6 @@ function showEditForm(){
         uploadPhotosInput.value = "";
         document.removeEventListener("keyup", escapeButtonHandler)
     }
-
-    openEditForm();
 }
 
 getPicturesData();
