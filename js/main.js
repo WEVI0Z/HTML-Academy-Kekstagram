@@ -1,18 +1,5 @@
 'use strict';
 
-function getRandomNumber(minNumber, maxNumber) {
-    var min = Math.ceil(minNumber);
-    var max = Math.floor(maxNumber);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-function escapeTemplate(doSomethingFunction, key) {
-    if(key === "Escape") {
-        doSomethingFunction();
-    }
-}
-
-//Генерация случайного массива данных
 var PHOTOS_NUMBER = 25;
 
 var COMMENTS_TEXT = [
@@ -60,6 +47,18 @@ var DESCRIPTION_LIST = [
     "Вот это тачка!"
 ];
 
+var MIN_LIKES_AMOUNT = 15;
+var MAX_LIKES_AMOUNT = 200;
+
+var MIN_COMMENTS_AMOUNT = 2;
+var MAX_COMMENTS_AMOUNT = 6;
+
+var FIRST_AVATAR_NUMBER = 1;
+var LAST_AVATAR_NUMBER = 6;
+
+var SMALL_IMG_WIDTH = 35;
+var SMALL_IMG_HEIGHT = 35;
+
 var FILTERS_LIST = [
     {
         name: 'chrome',
@@ -98,16 +97,28 @@ var FILTERS_LIST = [
     }
 ];
 
+function getRandomNumber(minNumber, maxNumber) {
+    var min = Math.ceil(minNumber);
+    var max = Math.floor(maxNumber);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function escapeTemplate(doSomethingFunction, key) {
+    if(key === "Escape") {
+        doSomethingFunction();
+    }
+}
+
 var picturesData = [];
 
 function getPicturesData() {
     function setUpComments() {
         var commentsList = [];
-        var commentAmount = getRandomNumber(2, 10);
+        var commentsAmount = getRandomNumber(MIN_COMMENTS_AMOUNT, MAX_COMMENTS_AMOUNT);
 
-        for(var j = 0; j < commentAmount; j++) {
+        for(var j = 0; j < commentsAmount; j++) {
             commentsList.push({
-                avatar: "../img/avatar-" + getRandomNumber(1, 6) + ".svg",
+                avatar: "img/avatar-" + getRandomNumber(FIRST_AVATAR_NUMBER, LAST_AVATAR_NUMBER) + ".svg",
                 text: COMMENTS_TEXT[getRandomNumber(0, COMMENTS_TEXT.length - 1)]
             });
         }
@@ -115,12 +126,12 @@ function getPicturesData() {
         return commentsList;
     }
     for(var i = 0; i < PHOTOS_NUMBER; i++) {
-        var likesAmount = getRandomNumber(15, 200);
+        var likesAmount = getRandomNumber(MIN_LIKES_AMOUNT, MAX_LIKES_AMOUNT);
         var descriptionIndex = getRandomNumber(0, DESCRIPTION_LIST.length - 1);
         var userNameIndex = getRandomNumber(0, USER_NAMES.length - 1);
 
         picturesData[i] = {
-            url: "../photos/" + (i + 1) + ".jpg",
+            url: "photos/" + (i + 1) + ".jpg",
             likes: likesAmount,
             comments: setUpComments(),
             name: USER_NAMES[userNameIndex],
@@ -189,15 +200,14 @@ function showBigPicture(pictureData) {
             img.classList.add("social__picture");
             img.src = commentData.avatar;
             img.alt = "Аватар комментатора фотографии";
-            img.width = 35;
-            img.height = 35;
+            img.width = SMALL_IMG_WIDTH;
+            img.height = SMALL_IMG_HEIGHT;
 
             return img;
         }
         var li = document.createElement("li");
 
         li.classList.add("social__comment");
-
 
         li.appendChild(constructTheAvatar());
         li.appendChild(constructTheParagraph());
