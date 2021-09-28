@@ -103,9 +103,10 @@ function getRandomNumber(minNumber, maxNumber) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function escapeTemplate(doSomethingFunction, key) {
-    if(key === "Escape") {
-        doSomethingFunction();
+function escapeTemplate(action, evt) {
+    if(evt.key === "Escape") {
+        preventDefault();
+        action();
     }
 }
 
@@ -130,13 +131,13 @@ function getPicturesData() {
         var descriptionIndex = getRandomNumber(0, DESCRIPTION_LIST.length - 1);
         var userNameIndex = getRandomNumber(0, USER_NAMES.length - 1);
 
-        picturesData[i] = {
+        picturesData.push({
             url: "photos/" + (i + 1) + ".jpg",
             likes: likesAmount,
             comments: setUpComments(),
             name: USER_NAMES[userNameIndex],
             description: DESCRIPTION_LIST[descriptionIndex]
-        };
+        });
     }
 }
 
@@ -145,23 +146,17 @@ function drawPictures() {
 
     var pictureWrap = document.querySelector('.pictures');
     var template = document.querySelector('#picture').content.querySelector('.picture');
-
-    function setImgOptions(img, src, alt) {
-        img.src = src;
-        img.alt = alt;
-    }
     
-    picturesData.forEach(function(itPicture, index) {
+    picturesData.forEach(function(itPicture) {
         var newPicture = template.cloneNode(true);
 
         var pictureImg = newPicture.querySelector('.picture__img');
-        var pictureComments = newPicture.querySelector('.picture__comments');
-        var pictureLikes = newPicture.querySelector('.picture__likes');
-
-        setImgOptions(pictureImg, itPicture.url, itPicture.description);
         
-        pictureComments.textContent = itPicture.comments.length;
-        pictureLikes.textContent = itPicture.likes;
+        pictureImg.src = itPicture.url;
+        pictureImg.alt = itPicture.description;
+
+        newPicture.querySelector('.picture__comments').textContent = itPicture.comments.length;
+        newPicture.querySelector('.picture__likes').textContent = itPicture.likes;
 
         picturesFragment.appendChild(newPicture);
     });
@@ -268,7 +263,7 @@ function showBigPicture(pictureData) {
     function escapeButtonHandler(evt){
         evt.preventDefault();
 
-        escapeTemplate(closeBigPicture, evt.key);
+        escapeTemplate(closeBigPicture, evt);
     }
 
     function bigPictureHandlersControl() {
@@ -307,7 +302,7 @@ function showEditForm(){
 
     function escapeButtonHandler(evt) {
         evt.preventDefault();
-        escapeTemplate(hideEditForm, evt.key);
+        escapeTemplate(hideEditForm, evt);
     }
 
     function controlFilters() {
