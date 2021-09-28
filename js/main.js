@@ -120,7 +120,7 @@ function getPicturesData() {
         var userNameIndex = getRandomNumber(0, USER_NAMES.length - 1);
 
         picturesData[i] = {
-            url: "/photos/" + (i + 1) + ".jpg",
+            url: "../photos/" + (i + 1) + ".jpg",
             likes: likesAmount,
             comments: setUpComments(),
             name: USER_NAMES[userNameIndex],
