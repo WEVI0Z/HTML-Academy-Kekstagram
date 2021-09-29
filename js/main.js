@@ -296,7 +296,7 @@ function showEditForm(){
     var uploadPhotosInput = document.querySelector("#upload-file");
     var editFormOverlay = document.querySelector(".img-upload__overlay");
     var closeButton = editFormOverlay.querySelector(".img-upload__cancel");
-    var previewImage = editFormOverlay.querySelector(".img-upload__preview").querySelector("img");
+    var previewImage = editFormOverlay.querySelector(".img-upload__preview img");
     var filterButtonsWrap = editFormOverlay.querySelector(".effects__list");
     var hashtagsInput = editFormOverlay.querySelector(".text__hashtags");
     var descriptionInput = editFormOverlay.querySelector(".text__description");
