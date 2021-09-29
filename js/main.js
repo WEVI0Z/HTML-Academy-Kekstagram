@@ -107,7 +107,7 @@ function getPicturesData() {
 
         for(var j = 0; j < commentAmount; j++) {
             commentsList.push({
-                avatar: "../img/avatar-" + getRandomNumber(1, 6) + ".svg",
+                avatar: "img/avatar-" + getRandomNumber(1, 6) + ".svg",
                 text: COMMENTS_TEXT[getRandomNumber(0, COMMENTS_TEXT.length - 1)]
             });
         }
@@ -120,7 +120,7 @@ function getPicturesData() {
         var userNameIndex = getRandomNumber(0, USER_NAMES.length - 1);
 
         picturesData[i] = {
-            url: "../photos/" + (i + 1) + ".jpg",
+            url: "photos/" + (i + 1) + ".jpg",
             likes: likesAmount,
             comments: setUpComments(),
             name: USER_NAMES[userNameIndex],
