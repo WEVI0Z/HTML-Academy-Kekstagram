@@ -100,10 +100,11 @@ var FILTERS_LIST = {
 function getRandomNumber(minNumber, maxNumber) {
     var min = Math.ceil(minNumber);
     var max = Math.floor(maxNumber);
+    
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function escapeTemplate(action, evt) {
+function escapeButtonController(action, evt) {
     if(evt.key === "Escape") {
         evt.preventDefault();
         action();
@@ -147,13 +148,15 @@ function drawPictures() {
     var pictureWrap = document.querySelector('.pictures');
     var template = document.querySelector('#picture').content.querySelector('.picture');
     
-    picturesData.forEach(function(itPicture) {
+    picturesData.forEach(function(itPicture, index) {
         var newPicture = template.cloneNode(true);
 
         var pictureImg = newPicture.querySelector('.picture__img');
         
         pictureImg.src = itPicture.url;
         pictureImg.alt = itPicture.description;
+
+        newPicture.setAttribute('data-picture-position', index);
 
         newPicture.querySelector('.picture__comments').textContent = itPicture.comments.length;
         newPicture.querySelector('.picture__likes').textContent = itPicture.likes;
@@ -166,22 +169,18 @@ function drawPictures() {
     function controlPicturesHandler() {
         var pictures = pictureWrap.querySelectorAll(".picture");
 
-        pictures.forEach(function(itPicture, index) {
-            itPicture.addEventListener("click", function(evt){
-                evt.preventDefault();
-                console.log(index + " " + evt);
-
-                showBigPicture(picturesData[index]);
-            });
+        pictures.forEach(function(itPicture) {
+            itPicture.addEventListener("click", smallPictureClickHandler);
         });
     }
 
-    // function smallPictureClickHandler(evt) {
-    //     evt.preventDefault();
-    //     console.log(index + " " + evt);
+    function smallPictureClickHandler(evt) {
+        evt.preventDefault();
 
-    //     showBigPicture(picturesData[index]);
-    // }
+        var index = evt.currentTarget.getAttribute('data-picture-position');
+
+        showBigPicture(picturesData[index]);
+    }
 
     controlPicturesHandler();
 }
@@ -255,7 +254,7 @@ function showBigPicture(pictureData) {
         document.querySelector("body").classList.add("modalOpen");
 
         controlTheCommentsCounter();
-        bigPictureHandlersControl();
+        setUpBitPictureHandlers();
     }
 
     function closeBigPicture(evt){
@@ -263,15 +262,15 @@ function showBigPicture(pictureData) {
         commentsCountBlock.classList.remove("visually-hidden");
         commentsLoaderButton.classList.remove("visually-hidden");
         document.querySelector("body").classList.remove("modalOpen");
-        document.removeEventListener('keyup', escapeButtonHandler);
 
+        removeBigPictureHandlers();
         cleanBlock(socialComments);
     }
     
     function escapeButtonHandler(evt){
         evt.preventDefault();
 
-        escapeTemplate(closeBigPicture, evt);
+        escapeButtonController(closeBigPicture, evt);
     }
 
     function closeButtonHandler(evt) {
@@ -280,10 +279,14 @@ function showBigPicture(pictureData) {
         closeBigPicture();
     }
 
-    function bigPictureHandlersControl() {
+    function setUpBitPictureHandlers() {
         closeButton.addEventListener('click', closeButtonHandler);
+        document.addEventListener('keydown', escapeButtonHandler);
+    }
 
-        document.addEventListener('keyup', escapeButtonHandler);
+    function removeBigPictureHandlers() {
+        document.removeEventListener('keydown', escapeButtonHandler);
+        closeButton.removeEventListener('click', closeButtonHandler);
     }
 
     showPopUp();
@@ -292,17 +295,22 @@ function showBigPicture(pictureData) {
 function showEditForm(){
     var uploadPhotosInput = document.querySelector("#upload-file");
     var editFormOverlay = document.querySelector(".img-upload__overlay");
-    var closeButton = document.querySelector(".img-upload__overlay .img-upload__cancel");
+    var closeButton = editFormOverlay.querySelector(".img-upload__cancel");
+    var previewImage = editFormOverlay.querySelector(".img-upload__preview").querySelector("img");
+    var filterButtonsWrap = editFormOverlay.querySelector(".effects__list");
+    var hashtagsInput = editFormOverlay.querySelector(".text__hashtags");
+    var descriptionInput = editFormOverlay.querySelector(".text__description");
 
-    uploadPhotosInput.addEventListener("change", function(evt) {
+    function photosInputChangeHandler(evt) {
         evt.preventDefault();
 
         openEditForm();
-    });
+    }
+
+    uploadPhotosInput.addEventListener("change", photosInputChangeHandler);
 
     function escapeButtonHandler(evt) {
-        evt.preventDefault();
-        escapeTemplate(hideEditForm, evt);
+        escapeButtonController(hideEditForm, evt);
     }
 
     function closeButtonHandler(evt) {
@@ -311,45 +319,46 @@ function showEditForm(){
         hideEditForm();
     }
 
-    function controlEditFormsHandlers() {
-        closeButton.addEventListener("click", closeButtonHandler);
-    
-        document.addEventListener("keyup", escapeButtonHandler); 
+    function filterChooseButtonsHandler(evt) {
+        if (typeof(evt.target.value) === "string") {
+            var filterName = evt.target.value;
+            var chosenFilter = FILTERS_LIST[filterName];
+
+            if (filterName === "none") {
+                previewImage.removeAttribute("style");
+            } else {
+                previewImage.setAttribute("style", "filter: " + chosenFilter.cssRuleName +
+                     "(" + chosenFilter.maxValue + chosenFilter.unit + ")");
+            }
+        }
     }
 
-    function controlFilters() {
-        var previewImage = editFormOverlay.querySelector(".img-upload__preview").querySelector("img");
-        var filterButtonsWrap = editFormOverlay.querySelector(".effects__list");
+    function setUpEditFormHandlers() {
+        filterButtonsWrap.addEventListener("click", filterChooseButtonsHandler);
+        closeButton.addEventListener("click", closeButtonHandler);
+        document.addEventListener("keydown", escapeButtonHandler);
+    }
 
-        function setFilterButtonsLesteners() {
-            filterButtonsWrap.addEventListener("click", function(evt) {
-                // if(evt.target.type === "radio") {
-                //     FILTERS_LIST.forEach(function(itFilter) {
-                //         if(itFilter.name === evt.target.value) {
-                //             previewImage.setAttribute("style", "filter: " + itFilter.cssRuleName +
-                //              "(" + itFilter.maxValue + itFilter.unit + ")");
-                //         } else if(evt.target.value === "none"){
-                //             previewImage.removeAttribute("style");
-                //         }
-                //     });
-                // }
-
-            });
-        }
-        setFilterButtonsLesteners();
+    function removeEditFormHandlers() {
+        closeButton.removeEventListener("click", closeButtonHandler);
+        document.removeEventListener("keydown", escapeButtonHandler);
+        filterButtonsWrap.removeEventListener("click", filterChooseButtonsHandler);
     }
 
     function openEditForm() {
         editFormOverlay.classList.remove("hidden");
 
-        controlEditFormsHandlers();
-        controlFilters();
+        setUpEditFormHandlers();
     }
     
     function hideEditForm() {
         editFormOverlay.classList.add("hidden");
-        document.removeEventListener("keyup", escapeButtonHandler);
+
         uploadPhotosInput.value = "";
+        hashtagsInput.value = "";
+        descriptionInput.value = "";
+
+        removeEditFormHandlers();
     }
 }
 
