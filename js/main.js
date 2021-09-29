@@ -59,43 +59,43 @@ var LAST_AVATAR_NUMBER = 6;
 var SMALL_IMG_WIDTH = 35;
 var SMALL_IMG_HEIGHT = 35;
 
-var FILTERS_LIST = [
-    {
+var FILTERS_LIST = {
+    chrome: {
         name: 'chrome',
         cssRuleName: 'grayscale',
         minValue: 0,
         maxValue: 1,
         unit: ""
     },
-    {
+    sepia: {
         name: 'sepia',
         cssRuleName: 'sepia',
         minValue: 0,
         maxValue: 1,
         unit: ""
     },
-    {
+    marvin: {
         name: 'marvin',
         cssRuleName: 'invert',
         minValue: 0,
         maxValue: 100,
         unit: "%"
     },
-    {
+    phobos: {
         name: 'phobos',
         cssRuleName: 'blur',
         minValue: 0,
         maxValue: 3,
         unit: "px"
     },
-    {
+    heat: {
         name: 'heat',
         cssRuleName: 'brightness',
         minValue: 1,
         maxValue: 3,
         unit: ""
     }
-];
+};
 
 function getRandomNumber(minNumber, maxNumber) {
     var min = Math.ceil(minNumber);
@@ -323,16 +323,17 @@ function showEditForm(){
 
         function setFilterButtonsLesteners() {
             filterButtonsWrap.addEventListener("click", function(evt) {
-                if(evt.target.type === "radio") {
-                    FILTERS_LIST.forEach(function(itFilter) {
-                        if(itFilter.name === evt.target.value) {
-                            previewImage.setAttribute("style", "filter: " + itFilter.cssRuleName +
-                             "(" + itFilter.maxValue + itFilter.unit + ")");
-                        } else if(evt.target.value === "none"){
-                            previewImage.removeAttribute("style");
-                        }
-                    });
-                }
+                // if(evt.target.type === "radio") {
+                //     FILTERS_LIST.forEach(function(itFilter) {
+                //         if(itFilter.name === evt.target.value) {
+                //             previewImage.setAttribute("style", "filter: " + itFilter.cssRuleName +
+                //              "(" + itFilter.maxValue + itFilter.unit + ")");
+                //         } else if(evt.target.value === "none"){
+                //             previewImage.removeAttribute("style");
+                //         }
+                //     });
+                // }
+
             });
         }
         setFilterButtonsLesteners();
