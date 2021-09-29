@@ -187,7 +187,18 @@ function drawPictures() {
     controlPicturesHandler();
 }
 
-function showBigPicture(pictureData) {
+function showBigPicture(pictureData) {    
+    var body = document.querySelector("body");
+    var bigPicture = document.querySelector(".big-picture");
+    var picture = bigPicture.querySelector(".big-picture__img img");
+    var likesNumber = bigPicture.querySelector(".likes-count");
+    var commentsNumber = bigPicture.querySelector(".comments-count");
+    var socialComments = bigPicture.querySelector(".social__comments");
+    var closeButton = bigPicture.querySelector("#picture-cancel");
+    var commentsCountBlock = bigPicture.querySelector(".social__comment-count");
+    var commentsLoaderButton = bigPicture.querySelector(".social__comments-loader");
+    var pictureDescription = bigPicture.querySelector(".social__caption");
+
     function constructTheComment(commentData) {
         function constructTheParagraph() {
             var p = document.createElement("p");
@@ -223,16 +234,6 @@ function showBigPicture(pictureData) {
         block.innerHTML = "";
     }
     
-    var bigPicture = document.querySelector(".big-picture");
-    var picture = bigPicture.querySelector(".big-picture__img img");
-    var likesNumber = bigPicture.querySelector(".likes-count");
-    var commentsNumber = bigPicture.querySelector(".comments-count");
-    var socialComments = bigPicture.querySelector(".social__comments");
-    var closeButton = document.querySelector("#picture-cancel");
-    var commentsCountBlock = bigPicture.querySelector(".social__comment-count");
-    var commentsLoaderButton = document.querySelector(".social__comments-loader");
-    var pictureDescription = bigPicture.querySelector(".social__caption");
-    
     picture.src = pictureData.url;
     likesNumber.textContent = pictureData.likes;
     commentsNumber.textContent = pictureData.comments.length;
@@ -253,7 +254,7 @@ function showBigPicture(pictureData) {
 
     function showPopUp() {
         bigPicture.classList.remove("hidden");
-        document.querySelector("body").classList.add("modalOpen");
+        body.classList.add("modalOpen");
 
         controlTheCommentsCounter();
         setUpBitPictureHandlers();
@@ -263,7 +264,7 @@ function showBigPicture(pictureData) {
         bigPicture.classList.add("hidden");
         commentsCountBlock.classList.remove("visually-hidden");
         commentsLoaderButton.classList.remove("visually-hidden");
-        document.querySelector("body").classList.remove("modalOpen");
+        body.classList.remove("modalOpen");
 
         removeBigPictureHandlers();
         cleanBlock(socialComments);
