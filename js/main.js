@@ -274,12 +274,14 @@ function showBigPicture(pictureData) {
         escapeTemplate(closeBigPicture, evt);
     }
 
-    function bigPictureHandlersControl() {
-        closeButton.addEventListener('click', function(evt){
-            evt.preventDefault();
+    function closeButtonHandler(evt) {
+        evt.preventDefault();
 
-            closeBigPicture();
-        });
+        closeBigPicture();
+    }
+
+    function bigPictureHandlersControl() {
+        closeButton.addEventListener('click', closeButtonHandler);
 
         document.addEventListener('keyup', escapeButtonHandler);
     }
@@ -298,19 +300,21 @@ function showEditForm(){
         openEditForm();
     });
 
-    function controlEditFormsHandlers() {
-        closeButton.addEventListener("click", function(evt) {
-            evt.preventDefault();
-     
-            hideEditForm();
-        });
-    
-        document.addEventListener("keyup", escapeButtonHandler); 
-    }
-
     function escapeButtonHandler(evt) {
         evt.preventDefault();
         escapeTemplate(hideEditForm, evt);
+    }
+
+    function closeButtonHandler(evt) {
+        evt.preventDefault();
+     
+        hideEditForm();
+    }
+
+    function controlEditFormsHandlers() {
+        closeButton.addEventListener("click", closeButtonHandler);
+    
+        document.addEventListener("keyup", escapeButtonHandler); 
     }
 
     function controlFilters() {
