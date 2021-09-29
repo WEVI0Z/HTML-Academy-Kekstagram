@@ -51,7 +51,9 @@ var MIN_LIKES_AMOUNT = 15;
 var MAX_LIKES_AMOUNT = 200;
 
 var MIN_COMMENTS_AMOUNT = 2;
-var MAX_COMMENTS_AMOUNT = 6;
+var MAX_COMMENTS_AMOUNT = 9;
+var COMMENTS_AMOUNT_WITHOUT_LOAD = 5;
+
 
 var FIRST_AVATAR_NUMBER = 1;
 var LAST_AVATAR_NUMBER = 6;
@@ -100,7 +102,7 @@ var FILTERS_LIST = {
 function getRandomNumber(minNumber, maxNumber) {
     var min = Math.ceil(minNumber);
     var max = Math.floor(maxNumber);
-    
+
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
@@ -222,14 +224,14 @@ function showBigPicture(pictureData) {
     }
     
     var bigPicture = document.querySelector(".big-picture");
-    var picture = document.querySelector(".big-picture__img img");
-    var likesNumber = document.querySelector(".big-picture .likes-count");
-    var commentsNumber = document.querySelector(".big-picture .comments-count");
-    var socialComments = document.querySelector(".big-picture .social__comments");
+    var picture = bigPicture.querySelector(".big-picture__img img");
+    var likesNumber = bigPicture.querySelector(".likes-count");
+    var commentsNumber = bigPicture.querySelector(".comments-count");
+    var socialComments = bigPicture.querySelector(".social__comments");
     var closeButton = document.querySelector("#picture-cancel");
-    var commentsCountBlock = document.querySelector(".big-picture .social__comment-count");
+    var commentsCountBlock = bigPicture.querySelector(".social__comment-count");
     var commentsLoaderButton = document.querySelector(".social__comments-loader");
-    var pictureDescription = document.querySelector(".big-picture .social__caption");
+    var pictureDescription = bigPicture.querySelector(".social__caption");
     
     picture.src = pictureData.url;
     likesNumber.textContent = pictureData.likes;
@@ -237,12 +239,12 @@ function showBigPicture(pictureData) {
     pictureDescription.textContent = pictureData.description;
 
     function controlTheCommentsCounter() {
-        if(pictureData.comments.length <= 5) {
+        if(pictureData.comments.length <= COMMENTS_AMOUNT_WITHOUT_LOAD) {
             commentsCountBlock.classList.add("visually-hidden");
             commentsLoaderButton.classList.add("visually-hidden");
         }
 
-        var availableForShowCommentsAmount = Math.min(5, pictureData.comments.length);
+        var availableForShowCommentsAmount = Math.min(COMMENTS_AMOUNT_WITHOUT_LOAD, pictureData.comments.length);
 
         for(var i = 0; i < availableForShowCommentsAmount; i++) {
             socialComments.appendChild(constructTheComment(pictureData.comments[i]));
@@ -268,8 +270,6 @@ function showBigPicture(pictureData) {
     }
     
     function escapeButtonHandler(evt){
-        evt.preventDefault();
-
         escapeButtonController(closeBigPicture, evt);
     }
 
