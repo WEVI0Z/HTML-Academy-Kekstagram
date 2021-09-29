@@ -167,12 +167,15 @@ function drawPictures() {
         var pictures = pictureWrap.querySelectorAll(".picture");
 
         pictures.forEach(function(itPicture, index) {
-            itPicture.addEventListener("click", function(evt){
-                evt.preventDefault();
-
-                showBigPicture(picturesData[index]);
-            });
+            itPicture.addEventListener("click", smallPicturePressHandler);
         });
+    }
+
+    function smallPicturePressHandler() {
+        console.log(index + " " + evt)
+        evt.preventDefault();
+
+        showBigPicture(picturesData[index]);
     }
 
     controlPicturesHandler();
