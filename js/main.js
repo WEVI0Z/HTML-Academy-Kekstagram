@@ -54,7 +54,6 @@ var MIN_COMMENTS_AMOUNT = 2;
 var MAX_COMMENTS_AMOUNT = 9;
 var COMMENTS_AMOUNT_WITHOUT_LOAD = 5;
 
-
 var FIRST_AVATAR_NUMBER = 1;
 var LAST_AVATAR_NUMBER = 6;
 
@@ -122,7 +121,7 @@ function getPicturesData() {
 
         for(var j = 0; j < commentsAmount; j++) {
             commentsList.push({
-                avatar: "img/avatar-" + getRandomNumber(1, 6) + ".svg",
+                avatar: "img/avatar-" + getRandomNumber(FIRST_AVATAR_NUMBER, LAST_AVATAR_NUMBER) + ".svg",
                 text: COMMENTS_TEXT[getRandomNumber(0, COMMENTS_TEXT.length - 1)]
             });
         }
