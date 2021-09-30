@@ -239,17 +239,22 @@ function showBigPicture(pictureData) {
     commentsNumber.textContent = pictureData.comments.length;
     pictureDescription.textContent = pictureData.description;
 
+    function commentsAvailableCounter(startCommentIndex, lastCommentIndex) {
+        pictureData.comments.slice(startCommentIndex, lastCommentIndex).forEach(function(itComment) {
+            socialComments.appendChild(constructTheComment(itComment));
+        })
+    }
+
     function controlTheCommentsCounter() {
         if(pictureData.comments.length <= COMMENTS_AMOUNT_WITHOUT_LOAD) {
             commentsCountBlock.classList.add("visually-hidden");
             commentsLoaderButton.classList.add("visually-hidden");
         }
 
+        var firstCommentIndex = 0;
         var availableForShowCommentsAmount = Math.min(COMMENTS_AMOUNT_WITHOUT_LOAD, pictureData.comments.length);
 
-        for(var i = 0; i < availableForShowCommentsAmount; i++) {
-            socialComments.appendChild(constructTheComment(pictureData.comments[i]));
-        }
+        commentsAvailableCounter(firstCommentIndex, availableForShowCommentsAmount);
     }
 
     function showPopUp() {
