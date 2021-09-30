@@ -52,6 +52,7 @@ var MAX_LIKES_AMOUNT = 200;
 
 var MIN_COMMENTS_AMOUNT = 2;
 var MAX_COMMENTS_AMOUNT = 9;
+var FIRST_COMMENT_INDEX = 0;
 var COMMENTS_AMOUNT_WITHOUT_LOAD = 5;
 
 var FIRST_AVATAR_NUMBER = 1;
@@ -250,7 +251,7 @@ function showBigPicture(pictureData) {
             commentsLoaderButton.classList.add("visually-hidden");
         }
 
-        var firstCommentIndex = 0;
+        var firstCommentIndex = FIRST_COMMENT_INDEX;
         var availableForShowCommentsAmount = Math.min(COMMENTS_AMOUNT_WITHOUT_LOAD, pictureData.comments.length);
 
         commentsAvailableCounter(firstCommentIndex, availableForShowCommentsAmount);
