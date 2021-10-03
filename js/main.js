@@ -330,8 +330,6 @@ function showEditForm(){
     }
 
     function publishButtonHandler(evt) {
-        // evt.preventDefault();
-
         hashtagsCheck();
     }
 
@@ -408,6 +406,10 @@ function showEditForm(){
         };
         var hashtagsInputValue = hashtagsInput.value;
         var hashtagsList = hashtagsInputValue.split(" ");
+
+        hashtagsList = hashtagsList.map(function(itHashtag) {
+            return itHashtag.toLowerCase();
+        });
 
         if (hashtagsList.length > 5) {
             hashtagsStates.hashtagsAmount.status = false;
