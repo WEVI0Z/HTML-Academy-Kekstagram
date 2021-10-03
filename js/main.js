@@ -245,7 +245,7 @@ function showBigPicture(pictureData) {
     function commentsAvailableCounter(startCommentIndex, lastCommentIndex) {
         pictureData.comments.slice(startCommentIndex, lastCommentIndex).forEach(function(itComment) {
             socialComments.appendChild(constructTheComment(itComment));
-        })
+        });
     }
 
     function controlTheCommentsCounter() {
@@ -373,13 +373,13 @@ function showEditForm(){
 
     function hashtagsCheck() {
         var hashtagsStates = {
-            hashtagsAmount = true,
-            hashtagStartsWithGrid = true,
-            hashtagNotConsistsOnlyOfGrid = true,
-            hashtagsDevidedBySpaces = true,
-            hashtagsAreUnic = true,
-            hashtagsLength = true,
-        }
+            hashtagsAmount: true,
+            hashtagStartsWithGrid: true,
+            hashtagNotConsistsOnlyOfGrid: true,
+            hashtagsDevidedBySpaces: true,
+            hashtagsAreUnic: true,
+            hashtagsLength: true
+        };
         var hashtagsInputValue = hashtagsInput.value();
 
         if (hashtagsInputValue.length <= 5) {
@@ -393,7 +393,7 @@ function showEditForm(){
 
             }
 
-        })
+        });
     }
 }
 
