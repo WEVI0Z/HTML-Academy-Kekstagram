@@ -329,6 +329,12 @@ function showEditForm(){
         hideEditForm();
     }
 
+    function publishButtonHandler(evt) {
+        // evt.preventDefault();
+
+        hashtagsCheck();
+    }
+
     function filterChooseButtonsHandler(evt) {
         if (typeof(evt.target.value) === "string") {
             var filterName = evt.target.value;
@@ -347,12 +353,14 @@ function showEditForm(){
         filterButtonsWrap.addEventListener("click", filterChooseButtonsHandler);
         closeButton.addEventListener("click", closeButtonHandler);
         document.addEventListener("keydown", escapeButtonHandler);
+        publishButton.addEventListener("click", publishButtonHandler);
     }
 
     function removeEditFormHandlers() {
         closeButton.removeEventListener("click", closeButtonHandler);
         document.removeEventListener("keydown", escapeButtonHandler);
         filterButtonsWrap.removeEventListener("click", filterChooseButtonsHandler);
+        publishButton.removeEventListener("click", publishButtonHandler);
     }
 
     function openEditForm() {
@@ -373,28 +381,89 @@ function showEditForm(){
 
     function hashtagsCheck() {
         var hashtagsStates = {
-            hashtagsAmount: true,
-            hashtagStartsWithGrid: true,
-            hashtagNotConsistsOnlyOfGrid: true,
-            hashtagsDevidedBySpaces: true,
-            hashtagsAreUnic: true,
-            hashtagsLength: true
+            hashtagsAmount: {
+                status: true,
+                errorMessage: "Максимальное количество хештегов - 5 штук"
+            },
+            hashtagStartsWithGrid: {
+                status: true,
+                errorMessage: "Хештег должен начинаться с решетки"
+            },
+            hashtagNotConsistsOnlyOfGrid: {
+                status: true,
+                errorMessage: "Хештег должен состоять не только из решетки"
+            },
+            hashtagsDevidedBySpaces: {
+                status: true,
+                errorMessage: "Хештеги должны быть разделены пробелами"
+            },
+            hashtagsAreUnic: {
+                status: true,
+                errorMessage: "Хештеги должны быть уникальными"
+            },
+            hashtagLength: {
+                status: true,
+                errorMessage: "Максимальная длинна одного хештега состовляет 20 символов (включая решетку)"
+            }
         };
-        var hashtagsInputValue = hashtagsInput.value();
+        var hashtagsInputValue = hashtagsInput.value;
+        var hashtagsList = hashtagsInputValue.split(" ");
 
-        if (hashtagsInputValue.length <= 5) {
-
+        if (hashtagsList.length > 5) {
+            hashtagsStates.hashtagsAmount.status = false;
         }
-
-        var hashtagsValue = hashtagsInputValue.split(" ");
-
-        hashtagsValue.forEach(function (itHashtag) {
-            for(let i = 0; i < hashtagsInputValue.length; i++) {
-
+        hashtagsList.forEach(function (itHashtag) {
+            if (itHashtag[0] !== "#") {
+                hashtagsStates.hashtagStartsWithGrid.status = false;
             }
 
+            if (itHashtag.length === 1 && itHashtag[0] === "#") {
+                hashtagsStates.hashtagNotConsistsOnlyOfGrid.status = false;
+            } else if (itHashtag.length > 20) {
+                hashtagsStates.hashtagLength.status = false;
+            }
+
+            if (itemEntersInItemsCounter(hashtagsList, itHashtag) > 1) {
+                hashtagsStates.hashtagsAreUnic.status = false;
+            }
+
+            if (itemEntersInItemsCounter(itHashtag, "#") > 1) {
+                hashtagsStates.hashtagsDevidedBySpaces.status = false;
+            }
         });
+
+        function itemEntersInItemsCounter(items, item) {
+            if (typeof(items) === "string") {
+                items = items.split('');
+            }
+
+            var itemEntersInItemsCount = 0;
+
+            items.forEach(function(itItem) {
+                if (itItem === item) {
+                    itemEntersInItemsCount++;
+                }
+            });
+
+            return itemEntersInItemsCount;
+        }
+
+        function customValiditySetter() {
+            var validityMessage = "";
+    
+            for (var state in hashtagsStates) {
+                if (hashtagsStates[state].status === false) {
+                    validityMessage += hashtagsStates[state].errorMessage + ". ";
+                }
+            }
+            console.log(validityMessage);
+
+            hashtagsInput.setCustomValidity(validityMessage);
+        }
+        
+        customValiditySetter();
     }
+    // openEditForm();
 }
 
 getPicturesData();
