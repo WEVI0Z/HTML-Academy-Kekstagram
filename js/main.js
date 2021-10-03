@@ -456,14 +456,12 @@ function showEditForm(){
                     validityMessage += hashtagsStates[state].errorMessage + ". ";
                 }
             }
-            console.log(validityMessage);
 
             hashtagsInput.setCustomValidity(validityMessage);
         }
         
         customValiditySetter();
     }
-    // openEditForm();
 }
 
 getPicturesData();
