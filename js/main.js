@@ -61,6 +61,9 @@ var LAST_AVATAR_NUMBER = 6;
 var SMALL_IMG_WIDTH = 35;
 var SMALL_IMG_HEIGHT = 35;
 
+var MAX_HASHTAGS_AMOUNT = 5;
+var MAX_HASHTAG_LENGTH = 20;
+
 var FILTERS_LIST = {
     chrome: {
         name: 'chrome',
@@ -306,6 +309,7 @@ function showEditForm(){
     var filterButtonsWrap = editFormOverlay.querySelector(".effects__list");
     var hashtagsInput = editFormOverlay.querySelector(".text__hashtags");
     var descriptionInput = editFormOverlay.querySelector(".text__description");
+    var publishButton = editFormOverlay.querySelector(".img-upload__submit");
 
     function photosInputChangeHandler(evt) {
         evt.preventDefault();
@@ -365,6 +369,31 @@ function showEditForm(){
         descriptionInput.value = "";
 
         removeEditFormHandlers();
+    }
+
+    function hashtagsCheck() {
+        var hashtagsStates = {
+            hashtagsAmount = true,
+            hashtagStartsWithGrid = true,
+            hashtagNotConsistsOnlyOfGrid = true,
+            hashtagsDevidedBySpaces = true,
+            hashtagsAreUnic = true,
+            hashtagsLength = true,
+        }
+        var hashtagsInputValue = hashtagsInput.value();
+
+        if (hashtagsInputValue.length <= 5) {
+
+        }
+
+        var hashtagsValue = hashtagsInputValue.split(" ");
+
+        hashtagsValue.forEach(function (itHashtag) {
+            for(let i = 0; i < hashtagsInputValue.length; i++) {
+
+            }
+
+        })
     }
 }
 
