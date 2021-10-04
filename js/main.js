@@ -63,6 +63,7 @@ var SMALL_IMG_HEIGHT = 35;
 
 var MAX_HASHTAGS_AMOUNT = 5;
 var MAX_HASHTAG_LENGTH = 20;
+var MIN_HASHTAG_LENGTH = 2;
 
 var FILTERS_LIST = {
     chrome: {
@@ -411,7 +412,7 @@ function showEditForm(){
             return itHashtag.toLowerCase();
         });
 
-        if (hashtagsList.length > 5) {
+        if (hashtagsList.length > MAX_HASHTAGS_AMOUNT) {
             hashtagsStates.hashtagsAmount.status = false;
         }
         hashtagsList.forEach(function (itHashtag) {
@@ -419,9 +420,9 @@ function showEditForm(){
                 hashtagsStates.hashtagStartsWithGrid.status = false;
             }
 
-            if (itHashtag.length === 1 && itHashtag[0] === "#") {
+            if (itHashtag.length < MIN_HASHTAG_LENGTH && itHashtag[0] === "#") {
                 hashtagsStates.hashtagNotConsistsOnlyOfGrid.status = false;
-            } else if (itHashtag.length > 20) {
+            } else if (itHashtag.length > MAX_HASHTAG_LENGTH) {
                 hashtagsStates.hashtagLength.status = false;
             }
 
