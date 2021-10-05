@@ -379,32 +379,48 @@ function showEditForm(){
     }
 
     function hashtagsCheck() {
-        var hashtagsStates = {
+        var hashtagsValidityMessage = {
             hashtagsAmount: {
-                status: true,
                 errorMessage: "Максимальное количество хештегов - 5 штук"
             },
             hashtagStartsWithGrid: {
-                status: true,
                 errorMessage: "Хештег должен начинаться с решетки"
             },
             hashtagNotConsistsOnlyOfGrid: {
-                status: true,
                 errorMessage: "Хештег должен состоять не только из решетки"
             },
             hashtagsDevidedBySpaces: {
-                status: true,
                 errorMessage: "Хештеги должны быть разделены пробелами"
             },
             hashtagsAreUnic: {
-                status: true,
                 errorMessage: "Хештеги должны быть уникальными"
             },
             hashtagLength: {
-                status: true,
                 errorMessage: "Максимальная длинна одного хештега состовляет 20 символов (включая решетку)"
             }
         };
+
+        var hashtagsState = {
+            hashtagsAmount: {
+                status: false
+            },
+            hashtagStartsWithGrid: {
+                status: false
+            },
+            hashtagNotConsistsOnlyOfGrid: {
+                status: false
+            },
+            hashtagsDevidedBySpaces: {
+                status: false
+            },
+            hashtagsAreUnic: {
+                status: false
+            },
+            hashtagLength: {
+                status: false
+            }
+        };
+
         var hashtagsInputValue = hashtagsInput.value;
         var hashtagsList = hashtagsInputValue.split(" ");
 
@@ -413,25 +429,20 @@ function showEditForm(){
         });
 
         if (hashtagsList.length > MAX_HASHTAGS_AMOUNT) {
-            hashtagsStates.hashtagsAmount.status = false;
+            hashtagsState.hashtagsAmount.status = true;
         }
+
         hashtagsList.forEach(function (itHashtag) {
-            if (itHashtag[0] !== "#") {
-                hashtagsStates.hashtagStartsWithGrid.status = false;
-            }
+            hashtagsState.hashtagStartsWithGrid.status = itHashtag[0] !== "#";
+
+            hashtagsState.hashtagsAreUnic.status = itemEntersInItemsCounter(hashtagsList, itHashtag) > 1;
+
+            hashtagsState.hashtagsDevidedBySpaces.status = itemEntersInItemsCounter(itHashtag, "#") > 1;
 
             if (itHashtag.length < MIN_HASHTAG_LENGTH && itHashtag[0] === "#") {
-                hashtagsStates.hashtagNotConsistsOnlyOfGrid.status = false;
+                hashtagsState.hashtagNotConsistsOnlyOfGrid.status = true;
             } else if (itHashtag.length > MAX_HASHTAG_LENGTH) {
-                hashtagsStates.hashtagLength.status = false;
-            }
-
-            if (itemEntersInItemsCounter(hashtagsList, itHashtag) > 1) {
-                hashtagsStates.hashtagsAreUnic.status = false;
-            }
-
-            if (itemEntersInItemsCounter(itHashtag, "#") > 1) {
-                hashtagsStates.hashtagsDevidedBySpaces.status = false;
+                hashtagsState.hashtagLength.status = true;
             }
         });
 
@@ -454,9 +465,9 @@ function showEditForm(){
         function customValiditySetter() {
             var validityMessage = "";
     
-            for (var state in hashtagsStates) {
-                if (hashtagsStates[state].status === false) {
-                    validityMessage += hashtagsStates[state].errorMessage + ". ";
+            for (var state in hashtagsState) {
+                if (hashtagsState[state].status === true) {
+                    validityMessage += hashtagsValidityMessage[state].errorMessage + ". ";
                 }
             }
 
